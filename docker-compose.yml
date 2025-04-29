@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  yii2:
+    image: your-dockerhub-username/yii2-app:latest
+    deploy:
+      replicas: 1
+    ports:
+      - "8000:80"
+    networks:
+      - yii2_net
+networks:
+  yii2_net:
+    driver: overlay
