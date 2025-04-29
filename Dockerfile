@@ -1,14 +1,27 @@
-FROM php:7.4-apache
+FROM php:7.4-fpm
 
+# Install Nginx and dependencies
 RUN apt-get update && apt-get install -y \
-    git unzip zip libzip-dev libpng-dev libjpeg-dev libfreetype6-dev \
-    && docker-php-ext-install zip pdo pdo_mysql gd
+    nginx \
+    curl \
+    git \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY ./src /var/www/html
-WORKDIR /var/www/html
+# Install PHP extensions for Yii2
+RUN docker-php-ext-install pdo pdo_mysql
 
-RUN mkdir -p runtime web/assets \
- && chown -R www-data:www-data /var/www/html \
- && chmod -R 755 /var/www/html
+# Copy Yii2 application to container
+COPY . /var/www/html
 
+# Remove Apache2 since we are using Nginx
+RUN apt-get purge -y apache2
+
+# Set up the Nginx configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose port 80
 EXPOSE 80
+
+# Start Nginx and PHP-FPM
+CMD service nginx start && php-fpm -D
