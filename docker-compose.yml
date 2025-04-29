@@ -3,12 +3,13 @@ version: '3.7'
 services:
   yii2app:
     image: pandu321/yii2-app:latest
+    build: .
     ports:
       - "8080:80"
     networks:
       - yii2app_net
     deploy:
-      replicas: 1  # Set the number of replicas you want
+      replicas: 1
       restart_policy:
         condition: on-failure
 
