@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE_NAME = 'yii2-app' // Docker image name
-        DOCKER_TAG = 'latest'  // Docker tag (you can use dynamic tags as well)
+        DOCKER_TAG = 'latest'  // Docker tag (you can use dynamic tags  well)
         DOCKER_USERNAME = 'pandu321'
             }
 
@@ -35,7 +35,7 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(['ec2-ssh-key']) {
+                sshagent(credentials: ['ec2-ssh-key'])) {
                     sh """
                     ssh -o StrictHostKeyChecking=no $EC2_HOST '
                         docker pull pandu321/yii2-app:latest &&
