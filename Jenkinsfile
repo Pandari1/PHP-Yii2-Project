@@ -35,7 +35,7 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(['ec2-ssh-key']) {
+                sshagent(credentials: ['ec2-ssh-key'])) {
                     sh """
                     ssh -o StrictHostKeyChecking=no $EC2_HOST '
                         docker pull pandu321/yii2-app:latest &&
