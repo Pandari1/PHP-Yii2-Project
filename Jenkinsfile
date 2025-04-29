@@ -5,6 +5,7 @@ pipeline {
         DOCKER_IMAGE_NAME = 'yii2-app' // Docker image name
         DOCKER_TAG = 'latest'  // Docker tag (you can use dynamic tags  well)
         DOCKER_USERNAME = 'pandu321'
+        EC2_HOST = '3.83.246.10'
             }
 
     options {
@@ -35,13 +36,15 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(credentials: ['ec2-ssh-key'])) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no $EC2_HOST '
+                script {
+                    sshagent(credentials: ['ec2-ssh-key'])) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no $EC2_HOST '
                         docker pull pandu321/yii2-app:latest &&
                         docker stack deploy -c /home/ubuntu/yii2-app/docker-compose.yml yii2app
                     '
                     """
+                    }
                 }
             }
         }
