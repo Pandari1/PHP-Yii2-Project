@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_NAME = 'yii2-app' // Docker image namee
+        DOCKER_IMAGE_NAME = 'yii2-app' // Docker image name
         DOCKER_TAG = 'latest'  // Docker tag (you can use dynamic tags  well)
         DOCKER_USERNAME = 'pandu321'
             }
