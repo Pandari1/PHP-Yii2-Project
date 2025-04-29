@@ -1,24 +1,17 @@
-version: '3.8'
+version: '3.7'
 
 services:
-  php:
+  yii2app:
     image: pandu321/yii2-app:latest
-    expose:
-      - 9000
-    networks:
-      - yii2net
-
-  nginx:
-    image: nginx:latest
     ports:
       - "8080:80"
-    volumes:
-      - ./src:/var/www/html
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - php
     networks:
-      - yii2net
+      - yii2app_net
+    deploy:
+      replicas: 1  # Set the number of replicas you want
+      restart_policy:
+        condition: on-failure
 
 networks:
-  yii2net:
+  yii2app_net:
+    driver: overlay
