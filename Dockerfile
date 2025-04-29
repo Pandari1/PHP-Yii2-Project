@@ -13,6 +13,8 @@ RUN docker-php-ext-install pdo pdo_mysql
 
 # Copy Yii2 application to container
 COPY . /var/www/html
+# Copy the Nginx main configuration file (this configures Nginx settings)
+COPY nginx/default.conf /etc/nginx/sites-available/default
 
 # Remove Apache2 since we are using Nginx
 RUN apt-get purge -y apache2
