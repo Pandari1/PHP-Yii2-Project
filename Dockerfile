@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install -y \
 # Copy application code
 COPY ./src /var/www/html
 
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
 # Set working directory
 WORKDIR /var/www/html
 
