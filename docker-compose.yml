@@ -1,13 +1,19 @@
-version: "3.8"
+version: '3.8'
+
 services:
-  yii2:
-    image: your-dockerhub-username/yii2-app:latest
-    deploy:
-      replicas: 1
+  php:
+    build: .
+    volumes:
+      - ./src:/var/www/html
+    expose:
+      - 9000
+
+  nginx:
+    image: nginx:latest
     ports:
-      - "8000:80"
-    networks:
-      - yii2_net
-networks:
-  yii2_net:
-    driver: overlay
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
