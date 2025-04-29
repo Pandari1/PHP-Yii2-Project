@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE_NAME = 'yii2-app' // Docker image name
         DOCKER_TAG = 'latest'  // Docker tag (you can use dynamic tags  well)
         DOCKER_USERNAME = 'pandu321'
-        EC2_HOST = '3.83.246.10'
+        EC2_HOST = 'ubuntu@3.83.246.10'
             }
 
     options {
