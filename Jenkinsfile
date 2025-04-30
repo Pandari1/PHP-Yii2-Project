@@ -24,6 +24,14 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Install Composer Dependencies') {
+            steps {
+                script {
+                    // Install Composer dependencies before building the Docker image
+                    sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+                }
+            }
+        }
 
         stage('Build and Push Docker Image') {
             steps {
