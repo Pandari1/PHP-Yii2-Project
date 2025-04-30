@@ -17,4 +17,26 @@
     "yiisoft/yii2-debug": "~2.1.0",
     "yiisoft/yii2-gii": "~2.2.0"
   }
+  "require": {
+  "yiisoft/yii2": "~2.0.0",
+  "bower-asset/jquery": "~3.6.0"
+},
+"config": {
+  "platform": {
+    "php": "7.4.3"
+  }
+}
+  "repositories": [
+  {
+    "type": "vcs",
+    "url": "https://github.com/bower-asset/jquery"
+  }
+]
+  "repositories": [
+  {
+    "type": "composer",
+    "url": "https://asset-packagist.org"
+  }
+]
+  
 }
