@@ -49,28 +49,10 @@ pipeline {
                             # Clone latest code and deploy stack
                             rm -rf ~/yii2-app
                             git clone https://github.com/Pandari1/PHP-Yii2-Project.git ~/yii2-app
-                            cd ~/yii2-app
-                            
-                            docker service create \
-                            --name yii2 \
-                            --replicas 1 \
-                            --publish published=9000,target=9000 \
-                            --mount type=bind,source=/var/www/html,target=/var/www/html \
-                            $IMAGE_NAME
-
-                                
-    
-
-
-                  docker stack deploy -c docker-compose.yml yii2app
+                            cd ~/yii2-app 
+                            docker stack deploy -c docker-compose.yml yii2app
 EOF
                 """
-            }
-        }
-    }
-}
-                            '
-                        """
                     }
                 }
             }
