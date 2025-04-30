@@ -1,3 +1,4 @@
+# Set base image
 FROM php:8.1-fpm
 
 # Install PHP extensions
@@ -5,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     git unzip curl libzip-dev libpng-dev libonig-dev zip \
     && docker-php-ext-install pdo_mysql zip gd
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /var/www/html
 
 # Install Composer
@@ -14,7 +15,7 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 # Clear Composer cache
 RUN composer clear-cache
 
-# Copy composer files first for caching
+# Copy composer.json and composer.lock from the src directory to the container
 COPY src/composer.json ./
 COPY src/composer.lock ./  # Optional, if present
 
@@ -24,5 +25,8 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 # Copy the rest of the application
 COPY src/ /var/www/html/
 
+# Expose port for PHP-FPM
 EXPOSE 9000
+
+# Run PHP-FPM
 CMD ["php-fpm"]
