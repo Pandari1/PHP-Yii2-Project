@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name YOUR_PUBLIC_IP;
+    server_name 3.93.148.126;
 
     root /var/www/html/web;
     index index.php index.html;
