@@ -19,6 +19,7 @@ COPY composer.json ./
 # Install dependencies
 RUN composer install -vvv --no-interaction --prefer-dist --optimize-autoloader
 
+
 # Copy rest of the app
 COPY . /var/www/html/
 
