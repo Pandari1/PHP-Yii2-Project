@@ -40,16 +40,35 @@ pipeline {
                     sshagent(['ec2-ssh-key']) {
                         sh """
                             ssh -o StrictHostKeyChecking=no $EC2_HOST ' << EOF
+                            set -e
                             docker pull $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG &&
-                            docker service rm yii2 || true
+                            # Optional: remove existing stack or service
+                            docker stack rm yii2app || true
+                            sleep 10  # allow time to remove stack
+
+                            # Clone latest code and deploy stack
+                            rm -rf ~/yii2-app
+                            git clone https://github.com/Pandari1/PHP-Yii2-Project.git ~/yii2-app
+                            cd ~/yii2-app
+                            
                             docker service create \
                             --name yii2 \
                             --replicas 1 \
                             --publish published=9000,target=9000 \
                             --mount type=bind,source=/var/www/html,target=/var/www/html \
                             $IMAGE_NAME
+
+                                
+    
+
+
+                  docker stack deploy -c docker-compose.yml yii2app
 EOF
-                                docker stack deploy -c /home/ubuntu/yii2-app/docker-compose.yml yii2app
+                """
+            }
+        }
+    }
+}
                             '
                         """
                     }
