@@ -49,11 +49,11 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                         sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
-                        sh "docker push ${DOCKER_IMAGE}:latest"\
+                        sh "docker push ${DOCKERHUB_USER}/${DOCKER_IMAGE}:latest"
                     }
                 }
             }
-        }
+
 
         stage('Cleanup Workspace') {
             steps {
