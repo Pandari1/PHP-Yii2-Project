@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE_NAME = 'yii2-app'
         DOCKER_TAG = 'latest'
         DOCKER_USERNAME = 'pandu321'
-        EC2_HOST = 'ubuntu@3.83.246.10'
+        EC2_HOST = 'ubuntu@3.93.148.126'
     }
 
     options {
@@ -25,7 +25,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh '''
                             echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                            docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG .
+                            sh 'docker build -t $DOCKER_IMAGE_NAME ./src'
                             docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
                             docker logout
                         '''
@@ -39,8 +39,16 @@ pipeline {
                 script {
                     sshagent(['ec2-ssh-key']) {
                         sh """
-                            ssh -o StrictHostKeyChecking=no $EC2_HOST '
-                                docker pull $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG &&
+                            ssh -o StrictHostKeyChecking=no $EC2_HOST ' << EOF
+                            docker pull $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG &&
+                            docker service rm yii2 || true
+                            docker service create \
+                            --name yii2 \
+                            --replicas 1 \
+                            --publish published=9000,target=9000 \
+                            --mount type=bind,source=/var/www/html,target=/var/www/html \
+                            $IMAGE_NAME
+EOF
                                 docker stack deploy -c /home/ubuntu/yii2-app/docker-compose.yml yii2app
                             '
                         """
