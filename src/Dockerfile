@@ -15,7 +15,6 @@ RUN composer clear-cache
 
 # Copy only necessary files for faster build caching
 COPY composer.json ./
-COPY composer.lock ./  # Only if it exists
 
 # Install dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
