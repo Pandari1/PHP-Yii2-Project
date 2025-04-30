@@ -1,48 +1,20 @@
 {
-    "name": "yiisoft/yii2-app-basic",
-    "description": "Yii 2 Basic Project Template",
-    "keywords": ["yii2", "framework", "basic", "template"],
-    "homepage": "http://www.yiiframework.com/",
-    "type": "project",
-    "license": "BSD-3-Clause",
-    "require": {
-        "php": ">=7.4.3",
-        "yiisoft/yii2": "~2.0.0",
-        "yiisoft/yii2-bootstrap": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "yiisoft/yii2-debug": "~2.0.0",
-        "yiisoft/yii2-gii": "~2.0.0",
-        "yiisoft/yii2-redis": "~2.0.0",
-        "bower-asset/bootstrap": "4.5.0",
-        "npm-asset/jquery": "3.5.1"
-    },
-    "repositories": [
-  {
-    "type": "composer",
-    "url": "https://asset-packagist.org"
-  }
-]
-    "require-dev": {
-        "phpunit/phpunit": "9.5.*"
-    },
-    "autoload": {
-        "psr-4": {
-            "app\\": "src/"
-        }
-    },
-    "config": {
-        "preferred-install": "dist",
-        "optimize-autoloader": true
-    },
-    "scripts": {
-        "post-create-project-cmd": [
-            "yii\\composer\\Installer::postCreateProject"
-        ]
+  "name": "your/yii2-app",
+  "description": "Yii2 Sample Application",
+  "type": "project",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
     }
-    "repositories": [
-  {
-    "type": "composer",
-    "url": "https://asset-packagist.org"
+  ],
+  "require": {
+    "php": "^8.1",
+    "yiisoft/yii2": "~2.0.14",
+    "bower-asset/jquery": "^3.6"
+  },
+  "require-dev": {
+    "yiisoft/yii2-debug": "~2.1.0",
+    "yiisoft/yii2-gii": "~2.2.0"
   }
-]
 }
