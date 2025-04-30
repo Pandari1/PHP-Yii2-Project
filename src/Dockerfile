@@ -15,15 +15,15 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 # Clear Composer cache
 RUN composer clear-cache
 
-# Use ADD instead of COPY for local files
-ADD src/composer.json ./
-ADD src/composer.lock ./  # Optional, if present
+# Copy composer.json and composer.lock from the src directory to the container
+COPY src/composer.json ./
+COPY src/composer.lock ./  # Optional, if present
 
 # Install dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 # Copy the rest of the application
-ADD src/ /var/www/html/
+COPY src/ /var/www/html/
 
 # Expose port for PHP-FPM
 EXPOSE 9000
