@@ -2,12 +2,6 @@
   "name": "your/yii2-app",
   "description": "Yii2 Sample Application",
   "type": "project",
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://asset-packagist.org"
-    }
-  ],
   "require": {
     "php": "^8.1",
     "yiisoft/yii2": "~2.0.14",
@@ -16,27 +10,20 @@
   "require-dev": {
     "yiisoft/yii2-debug": "~2.1.0",
     "yiisoft/yii2-gii": "~2.2.0"
-  }
-  "require": {
-  "yiisoft/yii2": "~2.0.0",
-  "bower-asset/jquery": "~3.6.0"
-},
-"config": {
-  "platform": {
-    "php": "7.4.3"
-  }
-}
+  },
+  "config": {
+    "platform": {
+      "php": "7.4.3"
+    }
+  },
   "repositories": [
-  {
-    "type": "vcs",
-    "url": "https://github.com/bower-asset/jquery"
-  }
-]
-  "repositories": [
-  {
-    "type": "composer",
-    "url": "https://asset-packagist.org"
-  }
-]
-  
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/bower-asset/jquery"
+    }
+  ]
 }
