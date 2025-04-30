@@ -18,13 +18,9 @@ pipeline {
                 script {
                     // Check if composer.lock exists
                     if (fileExists("${env.PROJECT_DIR}/composer.lock")) {
-                        // Check if the composer.lock file is valid JSON
-                        def composerLockFile = readFile("${env.PROJECT_DIR}/composer.lock")
-                        try {
-                            // Try to parse the file to validate it
-                            def json = readJSON text: composerLockFile
-                        } catch (Exception e) {
-                            // If it's invalid, remove it and recreate
+                        // Validate composer.lock using jq
+                        def isValid = sh(script: "jq empty ${env.PROJECT_DIR}/composer.lock", returnStatus: true)
+                        if (isValid != 0) {
                             echo 'Invalid composer.lock file, regenerating it.'
                             sh "rm ${env.PROJECT_DIR}/composer.lock"
                         }
