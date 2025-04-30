@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
   yii2app:
-    image: pandu321/yii2-app:latest
     build: .
+    image: pandu321/yii2-app:latest
     ports:
       - "8080:80"  # Exposing port 8080 on the host to access the container
     networks:
