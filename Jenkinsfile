@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'pandu321/yii2-app'
+        DOCKER_IMAGE = 'yii2-app'
         PROJECT_DIR = 'src'
         DOCKERHUB_USERNAME = 'pandu321'
     }
