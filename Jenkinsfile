@@ -40,7 +40,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest src/"
+                sh "docker build -t ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest ."
             }
         }
 
