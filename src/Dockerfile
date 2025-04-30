@@ -14,7 +14,8 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 RUN composer clear-cache
 
 # Copy only necessary files for faster build caching
-COPY composer.json ./
+COPY src/composer.json ./
+COPY src/composer.lock ./
 
 # Install dependencies
 RUN composer install -vvv --no-interaction --prefer-dist --optimize-autoloader
