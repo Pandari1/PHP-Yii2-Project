@@ -37,10 +37,11 @@ pipeline {
                 }
             }
         }
-
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest ."
+                dir('src') {
+                    sh "docker build -t ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest -f Dockerfile ."
+                }
             }
         }
 
@@ -48,7 +49,6 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASS')]) {
-                        // Corrected password variable reference
                         sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USERNAME --password-stdin"
                         sh "docker push ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest"
                     }
