@@ -64,7 +64,7 @@ pipeline {
                             ssh -o StrictHostKeyChecking=no ${EC2_HOST} << 'EOF'
                                 set -e
                                 echo "Pulling latest Docker image..."
-                                docker pull ${DOCKER_USERNAME}/${DOCKER_IMAGE}:latest
+                                docker pull ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest
                                 echo "Removing existing Docker stack..."
                                 docker stack rm yii2app || true
                                 sleep 10
