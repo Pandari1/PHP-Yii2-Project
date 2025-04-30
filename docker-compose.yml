@@ -4,22 +4,25 @@ services:
   yii2-app:
     image: pandu321/yii2-app:latest
     deploy:
-      replicas: 1
+      replicas: 1  # Adjust based on scaling needs (set to 2+ for high availability)
       restart_policy:
         condition: on-failure
       update_config:
         parallelism: 1
         delay: 10s
     ports:
-      - "9000:9000"
+      - "9000:9000"  # Exposing PHP-FPM (adjust this if you're using a reverse proxy)
     volumes:
-      - yii2-app-data:/var/www/html
+      - yii2-app-data:/var/www/html  # Persistent storage for the application
     networks:
       - yii2-net
 
+
 volumes:
   yii2-app-data:
+    driver: local  # Using local volume for single-node; consider external volume for multi-node
 
 networks:
   yii2-net:
-    driver: overlay
+    driver: overlay  # Overlay network for multi-node Docker Swarm setup
+
