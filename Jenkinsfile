@@ -22,13 +22,25 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
+                    // Pull DockerHub credentials securely
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Log in to DockerHub
                         sh '''
-                            
-                            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                            sh 'docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG .'
-                            docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
-                            docker logout
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        
+                        '''
+                        // Build Docker Image using the Dockerfile and tag it
+                        sh """
+                        docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG .
+                        
+                        """
+                        // Push the Docker image to Docker Hub
+                        sh """
+                        docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
+                        """
+                        // Log out from DockerHub after pushing the image
+                        sh '''
+                        docker logout
                         '''
                     }
                 }
