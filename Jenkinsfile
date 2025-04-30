@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'yii2-app'
         PROJECT_DIR = 'src'
         DOCKERHUB_USERNAME = 'pandu321'
-        EC2_HOST = 'ubuntu@3.93.148.126'
+        EC2_HOST = 'ubuntu@3.83.246.10'
     }
 
     stages {
@@ -56,31 +56,32 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy on EC2 via SSH') {
             steps {
                 script {
                     sshagent(['ec2-ssh-key']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no $EC2_HOST << 'EOF'
+                            ssh -o StrictHostKeyChecking=no \$EC2_HOST << EOF
                             set -e
-                            # Pull the latest Docker image
-                            docker pull $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:latest
-                            # Remove existing stack (if any)
+                            echo "Pulling latest Docker image..."
+                            docker pull ${DOCKER_USERNAME}/${DOCKER_IMAGE_NAME}:latest
+                            echo "Removing existing Docker stack..."
                             docker stack rm yii2app || true
                             sleep 10
-                            # Clean old code and clone fresh repo
+                            echo "Cloning latest code..."
                             rm -rf ~/yii2-app
-                            git clone https://github.com/Pandari1/PHP-Yii2-Project.git ~/yii2-app
-                            # Deploy stack using docker-compose
+                            git clone https://github.com/Pandari1/PHP-Yii2-Project.git ~/yii2-appecho "Deploying Docker stack..."
                             cd ~/yii2-app
                             docker stack deploy -c docker-compose.yml yii2app
                         EOF
-                        """
+                    """
                     }
                 }
             }
         }
+
+
+            
 
         stage('Cleanup Workspace') {
             steps {
