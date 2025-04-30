@@ -13,10 +13,29 @@ pipeline {
             }
         }
 
+        stage('Validate composer.lock') {
+            steps {
+                script {
+                    // Check if composer.lock exists
+                    if (fileExists("${env.PROJECT_DIR}/composer.lock")) {
+                        // Check if the composer.lock file is valid JSON
+                        def composerLockFile = readFile("${env.PROJECT_DIR}/composer.lock")
+                        try {
+                            // Try to parse the file to validate it
+                            def json = readJSON text: composerLockFile
+                        } catch (Exception e) {
+                            // If it's invalid, remove it and recreate
+                            echo 'Invalid composer.lock file, regenerating it.'
+                            sh "rm ${env.PROJECT_DIR}/composer.lock"
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Install PHP Dependencies') {
             steps {
                 dir("${env.PROJECT_DIR}") {
-                    // Running composer install within the src directory
                     sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
                 }
             }
@@ -24,8 +43,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                // Ensure the build context is correct for Docker
-                sh "docker build -t ${DOCKER_IMAGE}:latest -f ${PROJECT_DIR}/Dockerfile ${PROJECT_DIR}"
+                sh "docker build -t ${DOCKER_IMAGE}:latest ${PROJECT_DIR}"
             }
         }
 
