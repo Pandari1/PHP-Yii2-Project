@@ -37,7 +37,7 @@ pipeline {
                         '''
                         // Build Docker Image using the Dockerfile and tag it
                         sh """
-                        docker build --no-cache -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG -f src/Dockerfile src/
+                        docker build -t pandu321/yii2-app:latest -f src/Dockerfile src/
                         
                         """
                         // Push the Docker image to Docker Hub
