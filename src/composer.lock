@@ -86,14 +86,14 @@
     "packages-dev": [
     {
         "name": "phpunit/phpunit",
-        "version": "^9.5.28", // or "9.5.28" for an exact version
+        "version": "^9.5.28",
         "source": {
             "type": "git",
             "url": "https://github.com/sebastianbergmann/phpunit.git",
-            "reference": "9.5.28" // Use the exact Git tag
+            "reference": "9.5.28"
         }
     }
-],
+]
     "autoload": {
         "psr-4": {
             "app\\": "src/"
