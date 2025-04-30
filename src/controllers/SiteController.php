@@ -1,7 +1,13 @@
 <?php
-class SiteController {
-    public function actionIndex() {
-        echo "Hello from SiteController!";
+
+namespace app\controllers;
+
+use yii\web\Controller;
+
+class SiteController extends Controller
+{
+    public function actionIndex()
+    {
+        return $this->render('index');
     }
 }
-?>
