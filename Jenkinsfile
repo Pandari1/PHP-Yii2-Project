@@ -15,6 +15,7 @@ pipeline {
     stages {
         stage('Cleanup Workspace') {
             steps {
+                // Clean the workspace before starting the build
                 deleteDir()
             }
         }
@@ -25,11 +26,13 @@ pipeline {
             }
         }
 
-        stage('Install Composer') {
+        stage('Install PHP and Composer') {
             steps {
                 script {
-                    // Install Composer if not installed
+                    // Install PHP and Composer dependencies
                     sh '''
+                    sudo apt update
+                    sudo apt install -y php-cli php-curl php-mbstring php-xml php-zip php-xsl
                     curl -sS https://getcomposer.org/installer | php
                     sudo mv composer.phar /usr/local/bin/composer
                     '''
@@ -40,9 +43,11 @@ pipeline {
         stage('Install Composer Dependencies') {
             steps {
                 script {
-                    // Navigate to the src directory and install dependencies
+                    // Navigate to the src directory, fix any composer.lock issues, and install dependencies
                     sh '''
-                    cd src && composer install --no-interaction --prefer-dist --optimize-autoloader
+                    cd src
+                    rm -f composer.lock  # Remove the existing corrupted composer.lock file if necessary
+                    composer install --no-interaction --prefer-dist --optimize-autoloader
                     '''
                 }
             }
@@ -51,11 +56,22 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
+                    // Pull DockerHub credentials securely
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Log in to DockerHub
                         sh '''
                         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                        docker build -t pandu321/yii2-app:latest -f src/Dockerfile src/
+                        '''
+                        // Build Docker Image using the Dockerfile and tag it
+                        sh """
+                        docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG -f src/Dockerfile src/
+                        """
+                        // Push the Docker image to Docker Hub
+                        sh """
                         docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
+                        """
+                        // Log out from DockerHub after pushing the image
+                        sh '''
                         docker logout
                         '''
                     }
@@ -67,18 +83,21 @@ pipeline {
             steps {
                 script {
                     sshagent(['ec2-ssh-key']) {
-                        sh '''
+                        sh """
                             ssh -o StrictHostKeyChecking=no $EC2_HOST ' << EOF
                             set -e
                             docker pull $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG &&
+                            # Optional: remove existing stack or service
                             docker stack rm yii2app || true
-                            sleep 10
+                            sleep 10  # allow time to remove stack
+
+                            # Clone latest code and deploy stack
                             rm -rf ~/yii2-app
                             git clone https://github.com/Pandari1/PHP-Yii2-Project.git ~/yii2-app
                             cd ~/yii2-app
                             docker stack deploy -c docker-compose.yml yii2app
 EOF
-                        '''
+                        """
                     }
                 }
             }
