@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "yourdockerhubusername/yii2-app"
+        DOCKER_IMAGE = 'pandu321/yii2-app'
+        PROJECT_DIR = 'src'
     }
 
     stages {
@@ -12,36 +13,30 @@ pipeline {
             }
         }
 
-        stage('Install PHP and Composer') {
+        stage('Install PHP Dependencies') {
             steps {
-                sh '''
-                    sudo apt update
-                    sudo apt install -y php php-cli unzip curl php-mbstring php-xml php-dom php-xsl
-                    curl -sS https://getcomposer.org/installer | php
-                    sudo mv composer.phar /usr/local/bin/composer
-                '''
-            }
-        }
-
-        stage('Install Composer Dependencies') {
-            steps {
-                dir('src') {
+                dir("${env.PROJECT_DIR}") {
                     sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
                 }
             }
         }
 
-        stage('Build and Push Docker Image') {
+        stage('Build Docker Image') {
             steps {
-                sh '''
-                    docker build -t $DOCKER_IMAGE ./src
-                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                    docker push $DOCKER_IMAGE
-                '''
+                sh "docker build -t ${DOCKER_IMAGE}:latest ${PROJECT_DIR}"
             }
         }
 
-        stage('Cleanup') {
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                    sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
+                    sh "docker push ${DOCKER_IMAGE}:latest"
+                }
+            }
+        }
+
+        stage('Cleanup Workspace') {
             steps {
                 cleanWs()
             }
