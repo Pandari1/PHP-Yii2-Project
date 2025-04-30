@@ -16,6 +16,7 @@ pipeline {
         stage('Install PHP Dependencies') {
             steps {
                 dir("${env.PROJECT_DIR}") {
+                    // Running composer install within the src directory
                     sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
                 }
             }
@@ -23,7 +24,8 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${DOCKER_IMAGE}:latest ${PROJECT_DIR}"
+                // Ensure the build context is correct for Docker
+                sh "docker build -t ${DOCKER_IMAGE}:latest -f ${PROJECT_DIR}/Dockerfile ${PROJECT_DIR}"
             }
         }
 
@@ -43,4 +45,3 @@ pipeline {
         }
     }
 }
-    
