@@ -1,12 +1,25 @@
+# src/Dockerfile
+
 FROM php:8.1-fpm
 
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy application code and pre-installed vendor dir
-COPY src/ .               # your Yii2 source code
-COPY vendor/ ./vendor/    # already installed by Jenkins
+# Install system dependencies and PHP extensions
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    libonig-dev \
+    libxml2-dev \
+    libxslt-dev \
+    && docker-php-ext-install pdo_mysql mbstring zip dom xsl
 
-# Add PHP extensions as needed (example below)
-RUN docker-php-ext-install pdo pdo_mysql
+# Copy project files (assumes vendor/ is already generated in pipeline)
+COPY . .
 
+# Expose port
 EXPOSE 9000
+
+CMD ["php-fpm"]
