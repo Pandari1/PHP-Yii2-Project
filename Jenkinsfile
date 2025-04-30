@@ -43,6 +43,18 @@ pipeline {
             }
         }
 
+        stage('Clean Composer Files') {
+            steps {
+                script {
+                    // Clean up composer.lock and vendor directory before running composer install
+                    sh '''
+                    rm -f src/composer.lock
+                    rm -rf src/vendor
+                    '''
+                }
+            }
+        }
+
         stage('Install Composer Dependencies') {
             steps {
                 script {
@@ -95,7 +107,7 @@ pipeline {
                             git clone https://github.com/Pandari1/PHP-Yii2-Project.git ~/yii2-app
                             cd ~/yii2-app 
                             docker stack deploy -c docker-compose.yml yii2app
-EOF
+                            EOF
                         """
                     }
                 }
