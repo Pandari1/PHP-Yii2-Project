@@ -1,9 +1,25 @@
-version: '3.7'
+version: '3.8'
 
 services:
-  yii2:
-    build: ./src
+  yii2-app:
+    image: yourdockerhubusername/yii2-app:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
     ports:
       - "9000:9000"
     volumes:
-      - ./src:/var/www/html
+      - yii2-app-data:/var/www/html
+    networks:
+      - yii2-net
+
+volumes:
+  yii2-app-data:
+
+networks:
+  yii2-net:
+    driver: overlay
