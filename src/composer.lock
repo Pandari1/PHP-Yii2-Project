@@ -1,16 +1,3 @@
-{
-    "packages-dev": [
-        {
-            "name": "phpunit/phpunit",
-            "version": "9.5.28",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "9.5.28"
-            },
-            "require": {
-                "php": "^7.3 || ^8.0"
-            }
-        }
-    ]
-}
+# In your local src directory
+rm -f src/composer.lock
+composer update --no-interaction --prefer-dist
