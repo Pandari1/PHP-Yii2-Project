@@ -4,6 +4,8 @@ services:
   yii2app:
     image: pandu321/yii2-app:latest
     build: .
+    ports:
+      - "8080:80"  # Exposing port 8080 on the host
     networks:
       - yii2app_net
     deploy:
