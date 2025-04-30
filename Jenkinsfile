@@ -74,7 +74,7 @@ pipeline {
                                 echo "Deploying Docker stack..."
                                 cd ~/yii2-app
                                 docker stack deploy -c docker-compose.yml yii2app
-                                EOF
+                            EOF
                         """
                     }
                 }
