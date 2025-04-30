@@ -1,28 +1,35 @@
-# Set base image
+# Base image
 FROM php:8.1-fpm
 
-# Install PHP extensions
-RUN apt-get update && apt-get install -y \
-    git unzip curl libzip-dev libpng-dev libonig-dev zip \
-    && docker-php-ext-install pdo_mysql zip gd
-
+# Set working directory
 WORKDIR /var/www/html
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
-
-RUN composer clear-cache
-
-# Copy only necessary files for faster build caching
-COPY ./src/composer.json ./
-COPY ./src/composer.lock ./
-
 # Install dependencies
-RUN composer install -vvv --no-interaction --prefer-dist --optimize-autoloader
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    curl \
+    libzip-dev \
+    zip \
+    && docker-php-ext-install zip pdo pdo_mysql
 
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer
 
-# Copy rest of the app
-COPY . /var/www/html/
+# Copy Composer files
+COPY composer.json composer.lock ./
 
+# Install PHP dependencies
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Copy the full application code
+COPY . .
+
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+
+# Expose port (optional if used with NGINX)
 EXPOSE 9000
+
 CMD ["php-fpm"]
