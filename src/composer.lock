@@ -1,0 +1,111 @@
+{
+    "content-hash": "a9a3f2d412aef2b0f3f8e9dbfd71b5c16fbeeb38b0cb929a9f2995a92c57f2a9",
+    "packages": [
+        {
+            "name": "yiisoft/yii2",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://github.com/yiisoft/yii2/archive/2.0.0.tar.gz",
+                "reference": "2.0.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4.3"
+            }
+        },
+        {
+            "name": "yiisoft/yii2-bootstrap",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-bootstrap.git",
+                "reference": "2.0.0"
+            }
+        },
+        {
+            "name": "yiisoft/yii2-swiftmailer",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-swiftmailer.git",
+                "reference": "2.0.0"
+            }
+        },
+        {
+            "name": "yiisoft/yii2-debug",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-debug.git",
+                "reference": "2.0.0"
+            }
+        },
+        {
+            "name": "yiisoft/yii2-gii",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-gii.git",
+                "reference": "2.0.0"
+            }
+        },
+        {
+            "name": "yiisoft/yii2-redis",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-redis.git",
+                "reference": "2.0.0"
+            }
+        },
+        {
+            "name": "bower-asset/bootstrap",
+            "version": "4.5.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://github.com/twbs/bootstrap/archive/v4.5.0.tar.gz",
+                "shasum": ""
+            }
+        },
+        {
+            "name": "npm-asset/jquery",
+            "version": "3.5.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://github.com/jquery/jquery/archive/3.5.1.tar.gz",
+                "shasum": ""
+            }
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "phpunit/phpunit",
+            "version": "^9.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/phpunit.git",
+                "reference": "9.5"
+            }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "app\\": "src/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "yii\\composer\\Installer::postCreateProject"
+        ]
+    }
+}
