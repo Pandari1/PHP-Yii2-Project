@@ -1,18 +1,9 @@
 version: '3.7'
 
 services:
-  yii2app:
-    image: pandu321/yii2-app:latest
-    build: .
+  yii2:
+    build: ./src
     ports:
-      - "8080:80"  # Exposing port 8080 on the host
-    networks:
-      - yii2app_net
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-
-networks:
-  yii2app_net:
-    driver: overlay
+      - "9000:9000"
+    volumes:
+      - ./src:/var/www/html
