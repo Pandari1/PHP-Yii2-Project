@@ -33,4 +33,10 @@
             "yii\\composer\\Installer::postCreateProject"
         ]
     }
+    "repositories": [
+  {
+    "type": "composer",
+    "url": "https://asset-packagist.org"
+  }
+]
 }
