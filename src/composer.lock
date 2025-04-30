@@ -93,7 +93,7 @@
             "reference": "9.5.28"
         }
     }
-]
+],
     "autoload": {
         "psr-4": {
             "app\\": "src/"
