@@ -42,7 +42,7 @@ pipeline {
                             ssh -o StrictHostKeyChecking=no $EC2_HOST '
                                 docker pull $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG &&
                                 docker stack rm yii2app
-                                docker stack deploy -c /home/ubuntu/yii2-app/docker-compose.yml yii2app
+                                docker stack deploy -c docker-compose.yml yii2app
                             '
                         """
                     }
