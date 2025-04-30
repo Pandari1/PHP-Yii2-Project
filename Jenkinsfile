@@ -46,8 +46,8 @@ pipeline {
         stage('Install Composer Dependencies') {
             steps {
                 script {
-                    // Install Composer dependencies before building the Docker image
-                    sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+                    // Ensure we're in the correct directory where composer.json is located
+                    sh 'cd src && composer install --no-interaction --prefer-dist --optimize-autoloader'
                 }
             }
         }
