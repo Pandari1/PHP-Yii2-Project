@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'pandu321/yii2-app'
         PROJECT_DIR = 'src'
-        DOCKERHUB_USER = 'pandu321'
+        DOCKERHUB_USERNAME = 'pandu321'
     }
 
     stages {
@@ -47,9 +47,9 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                        sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
-                        sh "docker push ${DOCKERHUB_USER}/${DOCKER_IMAGE}:latest"
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh "echo $DOCKERHUB_PASSWORD| docker login -u $DOCKERHUB_USERNAME --password-stdin"
+                        sh "docker push ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest"
                     }
                 }
             }
