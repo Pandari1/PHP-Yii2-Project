@@ -24,6 +24,17 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Install Composer') {
+            steps {
+                script {
+                    // Install Composer if not installed
+                    sh '''
+                    curl -sS https://getcomposer.org/installer | php
+                    sudo mv composer.phar /usr/local/bin/composer
+                    '''
+                }
+            }
+        }
         stage('Install Composer Dependencies') {
             steps {
                 script {
