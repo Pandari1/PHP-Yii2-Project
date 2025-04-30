@@ -17,7 +17,7 @@ RUN composer clear-cache
 COPY composer.json ./
 
 # Install dependencies
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install -vvv --no-interaction --prefer-dist --optimize-autoloader
 
 # Copy rest of the app
 COPY . /var/www/html/
