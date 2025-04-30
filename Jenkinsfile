@@ -26,7 +26,7 @@ pipeline {
                         sh '''
                             ...
                             echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                            sh docker build -t $DOCKER_IMAGE_NAME ./src/*
+                            docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG ./src
                             docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
                             docker logout
                         '''
