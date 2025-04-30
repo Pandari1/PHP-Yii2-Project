@@ -61,7 +61,7 @@ pipeline {
                 script {
                     sshagent(['ec2-ssh-key']) {
                         sh """
-                            ssh -o StrictHostKeyChecking=no ${EC2_HOST} << 'EOF'
+                            ssh -o StrictHostKeyChecking=no ${EC2_HOST} <<EOF
                                 set -e
                                 echo "Pulling latest Docker image..."
                                 docker pull ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest
