@@ -6,27 +6,22 @@ RUN apt-get update && apt-get install -y \
     git unzip curl libzip-dev libpng-dev libonig-dev zip \
     && docker-php-ext-install pdo_mysql zip gd
 
-# Set working directory inside the container
 WORKDIR /var/www/html
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
-# Clear Composer cache
 RUN composer clear-cache
 
-# Copy composer.json and composer.lock from the src directory to the container
-COPY src/composer.json ./
-COPY src/composer.lock ./  # Optional, if present
+# Copy only necessary files for faster build caching
+COPY composer.json ./
+COPY composer.lock ./  # Only if it exists
 
 # Install dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Copy the rest of the application
-COPY src/ /var/www/html/
+# Copy rest of the app
+COPY . /var/www/html/
 
-# Expose port for PHP-FPM
 EXPOSE 9000
-
-# Run PHP-FPM
 CMD ["php-fpm"]
