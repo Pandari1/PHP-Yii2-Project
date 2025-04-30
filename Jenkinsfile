@@ -24,13 +24,19 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Install Composer') {
+        stage('Install PHP and Composer') {
             steps {
                 script {
-                    // Install Composer if not installed
+                    // Install PHP and Composer if not installed
                     sh '''
-                    curl -sS https://getcomposer.org/installer | php
-                    sudo mv composer.phar /usr/local/bin/composer
+                    if ! command -v php &> /dev/null; then
+                        sudo apt update
+                        sudo apt install -y php-cli php-mbstring unzip curl
+                    fi
+                    if ! command -v composer &> /dev/null; then
+                        curl -sS https://getcomposer.org/installer | php
+                        sudo mv composer.phar /usr/local/bin/composer
+                    fi
                     '''
                 }
             }
@@ -52,12 +58,10 @@ pipeline {
                         // Log in to DockerHub
                         sh '''
                         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                        
                         '''
                         // Build Docker Image using the Dockerfile and tag it
                         sh """
-                        docker build -t pandu321/yii2-app:latest -f src/Dockerfile src/
-                        
+                        docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG -f src/Dockerfile src/
                         """
                         // Push the Docker image to Docker Hub
                         sh """
@@ -77,7 +81,7 @@ pipeline {
                 script {
                     sshagent(['ec2-ssh-key']) {
                         sh """
-                            ssh -o StrictHostKeyChecking=no $EC2_HOST ' << EOF
+                            ssh -o StrictHostKeyChecking=no $EC2_HOST '<<EOF
                             set -e
                             docker pull $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG &&
                             # Optional: remove existing stack or service
@@ -87,10 +91,10 @@ pipeline {
                             # Clone latest code and deploy stack
                             rm -rf ~/yii2-app
                             git clone https://github.com/Pandari1/PHP-Yii2-Project.git ~/yii2-app
-                            cd ~/yii2-app 
+                            cd ~/yii2-app
                             docker stack deploy -c docker-compose.yml yii2app
-EOF
-                """
+                            EOF'
+                        """
                     }
                 }
             }
