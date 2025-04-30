@@ -37,7 +37,7 @@ pipeline {
                         '''
                         // Build Docker Image using the Dockerfile and tag it
                         sh """
-                        docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG -f ./src/Dockerfile .
+                        docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG -f src/Dockerfile .
                         
                         """
                         // Push the Docker image to Docker Hub
