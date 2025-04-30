@@ -19,7 +19,9 @@ COPY src/composer.json ./
 # This avoids failure if lock file is absent
 COPY src/composer.lock ./ 
 
-# Install PHP dependencies
+# Clear out any old cache and install fresh dependencies
+RUN rm -rf /root/.composer/cache
+RUN composer clear-cache
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 # Copy entire application code
