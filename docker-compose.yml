@@ -3,38 +3,13 @@ version: '3.7'
 services:
   yii2app:
     image: pandu321/yii2-app:latest
-    deploy:
-      replicas: 1  # Number of container replicas for scaling
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 500M
-      restart_policy:
-        condition: on-failure
+    build: .
     networks:
       - yii2app_net
-    environment:
-      - VIRTUAL_HOST=3.83.246.10  # Update with your actual domain if required
-
-  nginx:
-    image: nginx:latest
     deploy:
-      replicas: 1  # You can scale this depending on the number of NGINX instances needed
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
+      replicas: 1
       restart_policy:
         condition: on-failure
-     
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf  # NGINX config for routing
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Main NGINX config file
-      - ./src:/var/www/html  # Mount Yii2 source code directory
-    networks:
-      - yii2app_net
-    depends_on:
-      - yii2app
 
 networks:
   yii2app_net:
