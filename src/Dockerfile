@@ -15,14 +15,17 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql mbstring zip dom xsl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install any additional dependencies or utilities if necessary
+# RUN apt-get install -y some-package
+
 # Copy application source code into the container
 COPY . .
 
 # Copy Composer from official Composer image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Expose PHP-FPM port (optional)
+# Expose PHP-FPM port (optional, adjust based on actual use)
 EXPOSE 9000
 
-# Start PHP-FPM
+# Run php-fpm (PHP FastCGI Process Manager)
 CMD ["php-fpm"]
