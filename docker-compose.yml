@@ -3,31 +3,25 @@ version: '3.8'
 services:
   yii2-app:
     image: pandu321/yii2-app:latest
-    build:
-      context: ./src
-      dockerfile: Dockerfile  # Build from Dockerfile inside src/
-    volumes:
-      - yii2-app-data:/var/www/html  # Persistent storage for application
-    networks:
-      - yii2-net
-
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx:/etc/nginx/conf.d  # Mount the NGINX config folder (local)
-      - ./src:/var/www/html  # Mount the source code into NGINX
+    deploy:
+      replicas: 1  # Adjust based on scaling needs
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
     ports:
-      - "80:80"  # Expose NGINX to the host's port 80
-    depends_on:
-      - yii2-app  # Ensure Yii2 app starts first
+      - "9000:9000"  # Exposing PHP-FPM (adjust if you're using a reverse proxy)
+    volumes:
+      - yii2-app-data:/var/www/html  # Persistent storage for the application
     networks:
       - yii2-net
 
 volumes:
   yii2-app-data:
-    driver: local  # Volume for persistent data
+    driver: local  # Local volume for single-node; consider external volume for multi-node
 
 networks:
   yii2-net:
-    driver: bridge  # Create a bridge network for communication
+    driver: overlay  # Overlay network for Docker Swarm
 
