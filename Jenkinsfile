@@ -61,25 +61,26 @@ pipeline {
                 script {
                     sshagent(['ec2-ssh-key']) {
                         sh """
-                            ssh -o StrictHostKeyChecking=no ${EC2_HOST} <<EOF
-                                set -e
-                                echo "Pulling latest Docker image..."
-                                docker pull ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest
-                                echo "Removing existing Docker stack..."
-                                docker stack rm yii2app || true
-                                sleep 10
-                                echo "Cloning latest code..."
-                                rm -rf ~/yii2-app
-                                git clone https://github.com/Pandari1/PHP-Yii2-Project.git ~/yii2-app
-                                echo "Deploying Docker stack..."
-                                cd ~/yii2-app
-                                docker stack deploy -c docker-compose.yml yii2app
-                            EOF
-                        """
+        ssh -o StrictHostKeyChecking=no ${EC2_HOST} <<EOF
+        set -e
+        echo "Pulling latest Docker image..."
+        docker pull ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest
+        echo "Removing existing Docker stack..."
+        docker stack rm yii2app || true
+        sleep 10
+        echo "Cloning latest code..."
+        rm -rf ~/yii2-app
+        git clone https://github.com/Pandari1/PHP-Yii2-Project.git ~/yii2-app
+        echo "Deploying Docker stack..."
+        cd ~/yii2-app
+        docker stack deploy -c docker-compose.yml yii2app
+        EOF
+                """
                     }
                 }
             }
         }
+
     
 
         stage('Cleanup Workspace') {
