@@ -60,7 +60,7 @@ pipeline {
             steps {
                 script {
                     sshagent(['ec2-ssh-key']) {
-                        sh """
+                        sh '''#!/bin/bash
         ssh -o StrictHostKeyChecking=no ${EC2_HOST} <<EOF
         set -e
         echo "Pulling latest Docker image..."
@@ -75,7 +75,7 @@ pipeline {
         cd ~/yii2-app
         docker stack deploy -c docker-compose.yml yii2app
         EOF
-                """
+                '''
                     }
                 }
             }
