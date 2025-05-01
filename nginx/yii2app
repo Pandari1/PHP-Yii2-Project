@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name 3.93.148.126;  # fallback to default if no server_name
+    server_name _; # Set the correct domain or use _ for the default server.
 
     root /var/www/html/web;
     index index.php index.html;
@@ -10,11 +10,10 @@ server {
     }
 
     location ~ \.php$ {
-        include fastcgi_params;
         include snippets/fastcgi-php.conf;
-
-        fastcgi_pass yii2-app:9000;  # << Refer to the service name here
+        fastcgi_pass 127.0.0.1:9000;  # Use the host IP or Docker container name with port 9000
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
     }
 
     location ~ /\.ht {
