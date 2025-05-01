@@ -5,7 +5,8 @@ pipeline {
         DOCKER_IMAGE = 'yii2-app'
         PROJECT_DIR = 'src'
         DOCKERHUB_USERNAME = 'pandu321'
-        EC2_HOST = 'ubuntu@3.83.246.10'
+        // Update this to point to the new EC2 host
+        EC2_HOST = 'ubuntu@3.93.148.126'  // e.g., 'ubuntu@3.83.246.11'
     }
 
     stages {
@@ -18,6 +19,7 @@ pipeline {
         stage('Validate composer.lock') {
             steps {
                 script {
+                    // Check if composer.lock exists and is valid
                     if (fileExists("${env.PROJECT_DIR}/composer.lock")) {
                         def isValid = sh(script: "jq empty ${env.PROJECT_DIR}/composer.lock", returnStatus: true)
                         if (isValid != 0) {
@@ -32,6 +34,7 @@ pipeline {
         stage('Install PHP Dependencies') {
             steps {
                 dir("${env.PROJECT_DIR}") {
+                    // Install dependencies from composer.json
                     sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
                 }
             }
@@ -40,6 +43,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir('src') {
+                    // Build Docker image for the application
                     sh "docker build -t ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest -f Dockerfile ."
                 }
             }
@@ -48,6 +52,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
+                    // Push the Docker image to DockerHub
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASS')]) {
                         sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USERNAME --password-stdin"
                         sh "docker push ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:latest"
@@ -83,7 +88,7 @@ EOF
 
         stage('Cleanup Workspace') {
             steps {
-                cleanWs()
+                cleanWs()  // Clean up the workspace after the job is done
             }
         }
     }
